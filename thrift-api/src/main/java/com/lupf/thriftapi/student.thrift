@@ -1,6 +1,5 @@
 //这里指明了代码生成之后,所处的文件路径
-namespace java com.lupf.thriftserver.shriftcode
-namespace py py.com.lupf.thriftserver.shriftcode
+namespace java com.lupf.thriftapi
 
 //将shrift的数据类型格式转换为java习惯的格式
 typedef i16 short

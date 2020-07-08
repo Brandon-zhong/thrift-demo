@@ -3,6 +3,7 @@ package com.lupf.thriftserver.server;
 import com.lupf.thriftapi.DataException;
 import com.lupf.thriftapi.Student;
 import com.lupf.thriftapi.StudentService;
+import com.lupf.thriftserver.thriftconfig.ThriftProvider;
 import org.apache.thrift.TException;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
  * 服务端具体的操作的实现
  */
 @Service
+@ThriftProvider
 public class MyServerServiceImpl implements StudentService.Iface {
     @Override
     public Student getStudentByName(String name) throws DataException, TException {

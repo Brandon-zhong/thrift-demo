@@ -1,7 +1,7 @@
 package com.lupf.thriftserver;
 
-import com.lupf.thriftserver.server.ThriftServer1;
 import com.lupf.thriftserver.server.ThriftServer2;
+import com.lupf.thriftserver.thriftconfig.ThriftListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 public class ThriftServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ThriftServerApplication.class, args);
+        SpringApplication.run(ThriftServerApplication.class, args).addApplicationListener(new ThriftListener());
     }
 
     /**
