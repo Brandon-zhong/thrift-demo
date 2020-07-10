@@ -23,7 +23,7 @@ public class ThriftClient {
     private StudentService.Client client;
 
     private void init() {
-        tTransport = new TFramedTransport(new TSocket(host, port), 600);
+        tTransport = new TFramedTransport(new TSocket(host, port), 1024);
         //协议对象 这里使用协议对象需要和服务器的一致
         tProtocol = new TCompactProtocol(tTransport);
         client = new StudentService.Client(tProtocol);

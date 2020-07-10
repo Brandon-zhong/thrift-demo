@@ -1,14 +1,12 @@
 package com.lupf.thriftclient.service;
 
 import com.lupf.thriftapi.Student;
-import com.lupf.thriftclient.config.ThriftProvider;
 import com.lupf.thriftclient.thrift.pool.TTSocket;
 import com.lupf.thriftclient.thrift.pool.ThriftClientConnectPoolFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@ThriftProvider
 public class StudentServiceImpl implements StudentServiceInf {
     //每次创建一个新的连接的工具类
     //@Autowired
