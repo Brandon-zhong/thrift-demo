@@ -26,6 +26,7 @@ public class ThriftTransportPoolFactory implements PoolableObjectFactory<TTransp
     @Override
     public TTransport makeObject() throws Exception {
         TTransport tTransport = new TFramedTransport(new TSocket(host, port, timeout));
+        System.out.println("ThriftTransportPoolFactory.makeObject --> connect");
         tTransport.open();
         return tTransport;
     }

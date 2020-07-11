@@ -1,5 +1,6 @@
 package com.lupf.thriftclient.config;
 
+import org.apache.commons.pool.ObjectPool;
 import org.apache.thrift.TServiceClient;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -43,6 +44,9 @@ public class ThriftClientHandler implements InvocationHandler {
         Constructor<? extends TServiceClient> constructor = serviceClientClass.getConstructor(TProtocol.class);
         //从连接池中获取连接
         TTransport transport = transportPooled.getTransport();
+        System.out.println("ThriftClientHandler.invoke --> " + transport.toString());
+        ObjectPool<TTransport> pool = transportPooled.getTransportObjectPool();
+        System.out.println("ThriftClientHandler.invoke --> " + pool.getNumIdle() + "  " + pool.getNumActive());
         try {
             TServiceClient tServiceClient = constructor.newInstance(new TCompactProtocol(transport));
             return method.invoke(tServiceClient, args);

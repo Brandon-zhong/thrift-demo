@@ -34,6 +34,7 @@ public class ThriftConfig implements DisposableBean, ApplicationContextAware {
 
     public void setServerList(List<ThriftServerConfigBean> serverList) {
         this.serverList = serverList;
+        init();
     }
 
     private Map<String, ThriftTransportPooled> transportManagerMap = new ConcurrentHashMap<>();
@@ -44,8 +45,8 @@ public class ThriftConfig implements DisposableBean, ApplicationContextAware {
         return applicationContext;
     }
 
-    @PostConstruct
     public void init() {
+        System.out.println("ThriftConfig.init");
         if (serverList == null) {
             return;
         }
@@ -53,14 +54,20 @@ public class ThriftConfig implements DisposableBean, ApplicationContextAware {
             if (transportManagerMap.containsKey(bean.getAppName())) {
                 continue;
             }
-            ThriftTransportPooled transportPooled = new ThriftTransportPooled(bean.getHost(), bean.getPort(), new GenericObjectPool.Config(), bean);
+            GenericObjectPool.Config config = new GenericObjectPool.Config();
+            config.minIdle = 300;
+            config.maxIdle = 400;
+            config.maxActive = config.maxIdle;
+            config.maxWait = 30000;
+            config.lifo = false;
+            ThriftTransportPooled transportPooled = new ThriftTransportPooled(bean.getHost(), bean.getPort(), config, bean);
             transportManagerMap.put(bean.getAppName(), transportPooled);
             //创建bean
             ClassLoader classLoader = getClass().getClassLoader();
             for (String serviceName : bean.getInterfaceList()) {
                 try {
                     Class<?> aClass = classLoader.loadClass(serviceName);
-                    demo(aClass, transportPooled);
+                    registerBean(aClass, transportPooled);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -68,11 +75,11 @@ public class ThriftConfig implements DisposableBean, ApplicationContextAware {
         }
     }
 
-    public void demo(Class<?> serviceClass, ThriftTransportPooled transportPooled) throws ClassNotFoundException {
+    public void registerBean(Class<?> serviceClass, ThriftTransportPooled transportPooled) throws ClassNotFoundException {
         ClassLoader classLoader = getClass().getClassLoader();
         //加载service Iface接口
         Class<?> serviceIfaceClass = classLoader.loadClass(serviceClass.getName() + "$Iface");
-        Object serviceProxy = createServiceProxy(serviceClass, serviceIfaceClass, transportPooled, classLoader);
+//        Object serviceProxy = createServiceProxy(serviceClass, serviceIfaceClass, transportPooled, classLoader);
         //将applicationContext转换为ConfigurableApplicationContext
         ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
 
@@ -88,8 +95,10 @@ public class ThriftConfig implements DisposableBean, ApplicationContextAware {
             return null;
         });
         // 注册bean
-        defaultListableBeanFactory.registerBeanDefinition(serviceIfaceClass.getName(), beanDefinitionBuilder.getRawBeanDefinition());
-        System.out.println("ThriftConfig.demo --> " + serviceClass.getSimpleName() + "123");
+        String beanName = serviceClass.getSimpleName() + "Iface";
+        beanName = beanName.substring(0, 1).toLowerCase() + beanName.substring(1);
+        defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getRawBeanDefinition());
+        System.out.println("ThriftConfig.demo --> " + beanName);
     }
 
     @SuppressWarnings("unchecked")

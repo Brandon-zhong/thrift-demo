@@ -11,7 +11,8 @@ thrift:
         host: localhost
         port: 9999
         interfaceList:
-          - com.iyingdi.user.thrift.UserThriftService
+#          - com.iyingdi.user.thrift.UserThriftService
           - com.lupf.thriftapi.StudentService
 
 
+#debug: true

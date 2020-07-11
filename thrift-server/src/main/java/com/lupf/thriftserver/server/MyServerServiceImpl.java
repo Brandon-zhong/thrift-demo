@@ -24,7 +24,7 @@ public class MyServerServiceImpl implements StudentService.Iface {
         //模拟耗时
         System.out.println("模拟耗时...");
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

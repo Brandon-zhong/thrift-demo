@@ -18,6 +18,10 @@ public class ThriftTransportPooled {
     private ObjectPool<TTransport> transportObjectPool;
     private ThriftServerConfigBean serverConfigBean;
 
+    public ObjectPool<TTransport> getTransportObjectPool() {
+        return transportObjectPool;
+    }
+
     public ThriftTransportPooled(String host, int port, GenericObjectPool.Config config, ThriftServerConfigBean serverConfigBean) {
         this.host = host;
         this.port = port;
